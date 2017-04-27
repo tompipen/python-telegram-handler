@@ -1,5 +1,9 @@
 import logging
 
+from copy import copy
+
+from django.views.debug import ExceptionReporter
+
 from telegram_handler.utils import escape_html
 
 __all__ = ['TelegramFormatter', 'MarkdownFormatter', 'HtmlFormatter']
@@ -44,23 +48,23 @@ class HtmlFormatter(TelegramFormatter):
         """
         :param logging.LogRecord record:
         """
-        if record.funcName:
-            record.funcName = escape_html(str(record.funcName))
-        if record.name:
-            record.name = escape_html(str(record.name))
-        if record.msg:
-            record.msg = escape_html(record.getMessage())
-        if self.use_emoji:
-            print(record.name, record.levelno, record.levelname)
-            if record.levelno == logging.DEBUG:
-                print(record.levelno, record.levelname)
-                record.levelname += ' ' + EMOJI.WHITE_CIRCLE
-            elif record.levelno == logging.INFO:
-                print(record.levelno, record.levelname)
-                record.levelname += ' ' + EMOJI.BLUE_CIRCLE
-            else:
-                record.levelname += ' ' + EMOJI.RED_CIRCLE
-        return super(HtmlFormatter, self).format(record)
+
+        try:
+            request = record.request
+        except Exception:
+
+            request = None
+
+        if record.exc_info:
+            exc_info = record.exc_info
+        else:
+            exc_info = (None, record.getMessage(), None)
+
+        reporter = ExceptionReporter(request, is_email=True, *exc_info)
+
+        html_message = reporter.get_traceback_html()
+
+        return html_message
 
     def formatException(self, *args, **kwargs):
         string = super(HtmlFormatter, self).formatException(*args, **kwargs)
