@@ -73,6 +73,9 @@ class HtmlFormatter(TelegramFormatter):
 
         reporter = ExceptionReporter(request, is_email=True, *exc_info)
 
-        message = "<pre>%s\n\n%s</pre>" % (self.format(no_exc_record), reporter.get_traceback_text())
+        message = "<pre>%s\n\n%s</pre>" % (
+            super(HtmlFormatter,self).format(no_exc_record),
+            reporter.get_traceback_text()
+        )
 
         return message
