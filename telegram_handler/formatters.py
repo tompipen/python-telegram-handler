@@ -46,9 +46,11 @@ class HtmlFormatter(TelegramFormatter):
         self.use_emoji = kwargs.pop('use_emoji', False)
         super(HtmlFormatter, self).__init__(*args, **kwargs)
 
-    def format(self, record):
+    def format(self, record, limit=4096):
         """
-        :param logging.LogRecord record:
+        :param record: logging.Record 
+        :param limit: default 4096
+        :return: 
         """
 
         try:
@@ -78,7 +80,7 @@ class HtmlFormatter(TelegramFormatter):
 
         reporter = ExceptionReporter(request, is_email=True, *exc_info)
 
-        message = "<pre>%s\n\n%s</pre>" % (
+        message = "%s\n\n%s" % (
             escape_html(
                 super(HtmlFormatter,self).format(no_exc_record)
             ),
@@ -87,4 +89,8 @@ class HtmlFormatter(TelegramFormatter):
             )
         )
 
-        return message
+        return '<pre>{0}</pre>'.format(
+            message if len(message) <= limit
+            else message[:limit]
+        )
+
