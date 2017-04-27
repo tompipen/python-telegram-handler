@@ -55,6 +55,17 @@ class HtmlFormatter(TelegramFormatter):
 
             request = None
 
+        # Since we add a nicely formatted traceback on our own, create a copy
+        # of the log record without the exception data.
+        no_exc_record = copy(record)
+        no_exc_record.exc_info = None
+        no_exc_record.exc_text = None
+
+        if record.exc_info:
+            exc_info = record.exc_info
+        else:
+            exc_info = (None, record.getMessage(), None)
+
         if record.exc_info:
             exc_info = record.exc_info
         else:
@@ -62,10 +73,6 @@ class HtmlFormatter(TelegramFormatter):
 
         reporter = ExceptionReporter(request, is_email=True, *exc_info)
 
-        html_message = reporter.get_traceback_html()
+        message = "<pre>%s\n\n%s</pre>" % (self.format(no_exc_record), reporter.get_traceback_text())
 
-        return html_message
-
-    def formatException(self, *args, **kwargs):
-        string = super(HtmlFormatter, self).formatException(*args, **kwargs)
-        return '<pre>%s</pre>' % escape_html(string)
+        return message
