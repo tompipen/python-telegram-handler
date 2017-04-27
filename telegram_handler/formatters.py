@@ -39,7 +39,7 @@ class EMOJI:
 
 class HtmlFormatter(TelegramFormatter):
     """HTML formatter for telegram."""
-    fmt = '<code>%(asctime)s</code> <b>%(levelname)s</b>\nFrom %(name)s:%(funcName)s\n%(message)s'
+    fmt = '<code>%(asctime)s</code> <b>%(levelname)s</b>\n<pre>From %(name)s:%(funcName)s\n%(message)s</pre>'
     parse_mode = 'HTML'
 
     def __init__(self, *args, **kwargs):
@@ -64,33 +64,35 @@ class HtmlFormatter(TelegramFormatter):
 
         # Since we add a nicely formatted traceback on our own, create a copy
         # of the log record without the exception data.
-        no_exc_record = copy(record)
-        no_exc_record.exc_info = None
-        no_exc_record.exc_text = None
+        # no_exc_record = copy(record)
+        # no_exc_record.exc_info = None
+        # no_exc_record.exc_text = None
 
-        if record.exc_info:
-            exc_info = record.exc_info
-        else:
-            exc_info = (None, record.getMessage(), None)
+        # if record.exc_info:
+        #     exc_info = record.exc_info
+        # else:
+        #     exc_info = (None, record.getMessage(), None)
+        #
+        # if record.exc_info:
+        #     exc_info = record.exc_info
+        # else:
+        #     exc_info = (None, record.getMessage(), None)
 
-        if record.exc_info:
-            exc_info = record.exc_info
-        else:
-            exc_info = (None, record.getMessage(), None)
+        # reporter = ExceptionReporter(request, is_email=True, *exc_info)
+        #
+        # message = "%s\n\n%s" % (
+        #     super(HtmlFormatter, self).format(no_exc_record),
+        #     escape_html(
+        #         reporter.get_traceback_text()
+        #     )
+        # )
 
-        reporter = ExceptionReporter(request, is_email=True, *exc_info)
+        message = super(HtmlFormatter, self).format(record)
 
-        message = "%s\n\n%s" % (
-            escape_html(
-                super(HtmlFormatter,self).format(no_exc_record)
-            ),
-            escape_html(
-                reporter.get_traceback_text()
-            )
-        )
+        return message
 
-        return '<pre>{0}</pre>'.format(
-            message if len(message) <= limit
-            else message[:limit]
-        )
+        # return '<pre>{0}</pre>'.format(
+        #     message if len(message) <= limit
+        #     else message[:limit]
+        # )
 
