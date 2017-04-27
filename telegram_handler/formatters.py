@@ -4,7 +4,9 @@ from copy import copy
 
 from django.views.debug import ExceptionReporter
 
-from telegram_handler.utils import escape_html
+# from telegram_handler.utils import escape_html
+
+from django.template.defaultfilters import force_escape as escape_html
 
 __all__ = ['TelegramFormatter', 'MarkdownFormatter', 'HtmlFormatter']
 
@@ -77,8 +79,12 @@ class HtmlFormatter(TelegramFormatter):
         reporter = ExceptionReporter(request, is_email=True, *exc_info)
 
         message = "<pre>%s\n\n%s</pre>" % (
-            super(HtmlFormatter,self).format(no_exc_record),
-            reporter.get_traceback_text()
+            escape_html(
+                super(HtmlFormatter,self).format(no_exc_record)
+            ),
+            escape_html(
+                reporter.get_traceback_text()
+            )
         )
 
         return message
