@@ -52,7 +52,7 @@ class HtmlFormatter(TelegramFormatter):
         try:
             request = record.request
 
-            if getattr(request, 'POST', None):
+            if getattr(request, 'POST', None) is None:
                 request = None
         except Exception:
 
