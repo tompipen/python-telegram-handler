@@ -2,11 +2,8 @@ import logging
 
 from copy import copy
 
-from django.views.debug import ExceptionReporter
 
 # from telegram_handler.utils import escape_html
-
-from django.template.defaultfilters import force_escape as escape_html
 
 __all__ = ['TelegramFormatter', 'MarkdownFormatter', 'HtmlFormatter']
 
