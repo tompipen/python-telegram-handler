@@ -1,9 +1,6 @@
 import logging
 
-from copy import copy
-
-
-# from telegram_handler.utils import escape_html
+from telegram_handler.utils import escape_html
 
 __all__ = ['TelegramFormatter', 'MarkdownFormatter', 'HtmlFormatter']
 
@@ -66,46 +63,9 @@ class HtmlFormatter(TelegramFormatter):
             else:
                 record.levelname += ' ' + EMOJI.RED_CIRCLE
 
-        try:
-            request = record.request
+        return self.fmt % record.__dict__
 
-            if getattr(request, 'POST', None) is None:
-                request = None
-        except Exception:
-
-            request = None
-
-        # Since we add a nicely formatted traceback on our own, create a copy
-        # of the log record without the exception data.
-        # no_exc_record = copy(record)
-        # no_exc_record.exc_info = None
-        # no_exc_record.exc_text = None
-
-        # if record.exc_info:
-        #     exc_info = record.exc_info
-        # else:
-        #     exc_info = (None, record.getMessage(), None)
-        #
-        # if record.exc_info:
-        #     exc_info = record.exc_info
-        # else:
-        #     exc_info = (None, record.getMessage(), None)
-
-        # reporter = ExceptionReporter(request, is_email=True, *exc_info)
-        #
-        # message = "%s\n\n%s" % (
-        #     super(HtmlFormatter, self).format(no_exc_record),
-        #     escape_html(
-        #         reporter.get_traceback_text()
-        #     )
-        # )
-
-        message = super(HtmlFormatter, self).format(record)
-
-        return message
-
-        # return '<pre>{0}</pre>'.format(
-        #     message if len(message) <= limit
-        #     else message[:limit]
-        # )
-
+    def formatException(self, *args, **kwargs):
+        string = super(HtmlFormatter, self).formatException(*args, **kwargs)
+        return '<pre>%s</pre>' % escape_html(string)
+    
