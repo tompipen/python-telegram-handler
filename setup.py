@@ -4,7 +4,7 @@ with open('README.rst') as readme:
     with open('HISTORY.rst') as history:
         long_description = readme.read() + '\n\n' + history.read()
 
-VERSION = '2.0.1'
+VERSION = '2.0.2'
 
 setup(
     install_requires=['requests'],
@@ -20,7 +20,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
