@@ -52,8 +52,7 @@ class HtmlFormatter(TelegramFormatter):
         :param limit: default 4096
         :return: 
         """
-<<<<<<< HEAD
-=======
+
         super(HtmlFormatter, self).format(record)
 
         if record.funcName:
@@ -69,9 +68,6 @@ class HtmlFormatter(TelegramFormatter):
                 record.levelname += ' ' + EMOJI.BLUE_CIRCLE
             else:
                 record.levelname += ' ' + EMOJI.RED_CIRCLE
-
-        return self.fmt % record.__dict__
->>>>>>> sashgorokhov/master
 
         try:
             request = record.request
