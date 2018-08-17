@@ -4,7 +4,7 @@ import requests
 from telegram_handler.formatters import HtmlFormatter
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+logger.addHandler(logging.StreamHandler())
 
 __all__ = ['TelegramHandler']
 
