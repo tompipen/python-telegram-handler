@@ -2,6 +2,7 @@ import logging
 import requests
 import telegram
 import tempfile
+import datetime
 
 from telegram_handler.formatters import HtmlFormatter
 
@@ -91,7 +92,12 @@ class TelegramHandler(logging.Handler):
                 bot.send_document(
                     self.chat_id,
                     document=f,
-                    filename='{datetime}.{ext}',
+                    filename='{datetime}.{ext}'.format(
+                        datetime=datetime.datetime.now().strftime(
+                            '%Y%m%d%H%M%S%f'
+                        ),
+                        ext=ext,
+                    ),
                     disable_notification=self.disable_notification,
                     timeout=self.timeout,
                 )
