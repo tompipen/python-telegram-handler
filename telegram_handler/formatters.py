@@ -33,20 +33,17 @@ class EMOJI:
 
 class HtmlFormatter(TelegramFormatter):
     """HTML formatter for telegram."""
-    fmt = '<code>%(asctime)s</code> <b>%(levelname)s</b>\n<pre>From %(name)s:%(funcName)s\n%(message)s</pre>'
+    fmt = '<code>%(asctime)s</code> <b>%(levelname)s</b>\nFrom %(name)s:%(funcName)s\n%(message)s'
     parse_mode = 'HTML'
 
     def __init__(self, *args, **kwargs):
         self.use_emoji = kwargs.pop('use_emoji', False)
         super(HtmlFormatter, self).__init__(*args, **kwargs)
 
-    def format(self, record, limit=4096):
+    def format(self, record):
         """
-        :param record: logging.Record 
-        :param limit: default 4096
-        :return: 
+        :param logging.LogRecord record:
         """
-
         super(HtmlFormatter, self).format(record)
 
         if record.funcName:
