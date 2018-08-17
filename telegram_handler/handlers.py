@@ -1,5 +1,7 @@
 import logging
 import requests
+import telegram
+import tempfile
 
 from telegram_handler.formatters import HtmlFormatter
 
@@ -7,6 +9,12 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
 __all__ = ['TelegramHandler']
+
+EXTS = {
+    None: '.html',
+    telegram.ParseMode.HTML: '.html',
+    telegram.ParseMode.MARKDOWN: '.md',
+}
 
 
 class TelegramHandler(logging.Handler):
@@ -67,18 +75,29 @@ class TelegramHandler(logging.Handler):
 
     def emit(self, record):
         text = self.format(record)
-        data = {
-            'chat_id': self.chat_id,
-            'disable_web_page_preview': self.disable_web_page_preview,
-            'disable_notification': self.disable_notification,
-        }
 
-        if getattr(self.formatter, 'parse_mode', None):
-            data['parse_mode'] = self.formatter.parse_mode
+        parse_mode = getattr(self.formatter, 'parse_mode', telegram.ParseMode.HTML)
 
-        response = self.send_message(text, **data)
-        if not response:
-            return
+        ext = EXTS[parse_mode] if parse_mode in EXTS else EXTS[telegram.ParseMode.HTML]
 
-        if not response.get('ok', False):
-            logger.warning('Telegram responded with ok=false status! {}'.format(response))
+        with tempfile.NamedTemporaryFile(suffix=ext,) as f:
+
+            f.write(text)
+            f.seek(0)
+
+            bot = telegram.Bot(self.token,)
+
+            try:
+                bot.send_document(
+                    self.chat_id,
+                    document=f,
+                    filename='{datetime}.{ext}',
+                    disable_notification=self.disable_notification,
+                    timeout=self.timeout,
+                )
+            except telegram.TelegramError as ter:
+                logger.warning(
+                    'Telegram Error\n{}'.format(
+                        ter
+                    )
+                )

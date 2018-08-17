@@ -1,5 +1,7 @@
+setuptools
 requests
 mock
 pytest
 pytest-cov
 tox
+python-telegram-bot~=10.1.0

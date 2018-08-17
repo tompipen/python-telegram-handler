@@ -7,7 +7,10 @@ with open('README.rst') as readme:
 VERSION = '2.0.2'
 
 setup(
-    install_requires=['requests'],
+    install_requires=[
+        'requests',
+        'python-telegram-bot>=10.1.0,<10.2.0'
+    ],
     name='python-telegram-handler',
     version=VERSION,
     packages=['telegram_handler'],
