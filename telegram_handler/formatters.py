@@ -52,6 +52,26 @@ class HtmlFormatter(TelegramFormatter):
         :param limit: default 4096
         :return: 
         """
+<<<<<<< HEAD
+=======
+        super(HtmlFormatter, self).format(record)
+
+        if record.funcName:
+            record.funcName = escape_html(str(record.funcName))
+        if record.name:
+            record.name = escape_html(str(record.name))
+        if record.msg:
+            record.msg = escape_html(record.getMessage())
+        if self.use_emoji:
+            if record.levelno == logging.DEBUG:
+                record.levelname += ' ' + EMOJI.WHITE_CIRCLE
+            elif record.levelno == logging.INFO:
+                record.levelname += ' ' + EMOJI.BLUE_CIRCLE
+            else:
+                record.levelname += ' ' + EMOJI.RED_CIRCLE
+
+        return self.fmt % record.__dict__
+>>>>>>> sashgorokhov/master
 
         try:
             request = record.request
