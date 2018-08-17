@@ -68,4 +68,3 @@ class HtmlFormatter(TelegramFormatter):
     def formatException(self, *args, **kwargs):
         string = super(HtmlFormatter, self).formatException(*args, **kwargs)
         return '<pre>%s</pre>' % escape_html(string)
-    

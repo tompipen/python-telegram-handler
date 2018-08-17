@@ -82,7 +82,7 @@ class TelegramHandler(logging.Handler):
 
         with tempfile.NamedTemporaryFile(suffix=ext,) as f:
 
-            f.write(text)
+            f.write(text.encode('utf-8'))
             f.seek(0)
 
             bot = telegram.Bot(self.token,)
